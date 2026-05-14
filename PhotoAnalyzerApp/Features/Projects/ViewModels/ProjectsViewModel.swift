@@ -11,6 +11,7 @@ final class ProjectsViewModel {
     
     var selectedImageData: Data?
     var generatedTitle: String?
+    var currentFileName: String?
     var processingState: PhotoProcessingState = .idle
     
     var isOverlayPresented: Bool {
@@ -42,7 +43,8 @@ final class ProjectsViewModel {
                     return
                 }
                 
-                _ = try repository.createProject(imageData: data, title: title, hasFace: hasFace)
+                let project = try repository.createProject(imageData: data, title: title, hasFace: hasFace)
+                currentFileName = project.fileName
                 processingState = .ready(hasFace: hasFace)
             } catch {
                 processingState = .failed(message: error.localizedDescription)
@@ -50,13 +52,41 @@ final class ProjectsViewModel {
         }
     }
     
+    func openProject(_ project: PhotoProjectEntity) {
+        guard let data = loadImageData(fileName: project.fileName) else {
+            selectedImageData = nil
+            generatedTitle = project.title
+            currentFileName = nil
+            processingState = .failed(message: "Failed to load image")
+            return
+        }
+        
+        selectedImageData = data
+        generatedTitle = project.title
+        currentFileName = project.fileName
+        processingState = .ready(hasFace: project.hasFace)
+    }
+    
     func closeOverlay() {
         selectedImageData = nil
         generatedTitle = nil
+        currentFileName = nil
         processingState = .idle
     }
     
     func loadImageData(fileName: String) -> Data? {
         try? imageStorageService.loadImage(fileName: fileName)
+    }
+    
+    func makeShareItem() -> ShareItem? {
+        guard let currentFileName else { return nil }
+        
+        do {
+            let url = try imageStorageService.imageURL(for: currentFileName)
+            return ShareItem(url: url)
+        } catch {
+            processingState = .failed(message: error.localizedDescription)
+            return nil
+        }
     }
 }

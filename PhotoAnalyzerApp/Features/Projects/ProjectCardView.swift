@@ -1,11 +1,15 @@
 import SwiftUI
 
 struct ProjectCardView: View {
-    let imageData: Data?
+    let imageID: String
     let title: String
     let hasFace: Bool
     let orientation: PhotoOrientation
     let onTap: () -> Void
+    
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.imageDecodeService) private var imageDecodeService
+    @State private var thumbnailImage: UIImage?
     
     var body: some View {
         Button(action: onTap) {
@@ -42,12 +46,31 @@ struct ProjectCardView: View {
             .clipped()
         }
         .buttonStyle(.plain)
+        .task(id: imageID) {
+            guard let imageData else {
+                thumbnailImage = nil
+                return
+            }
+
+            let decoder = imageDecodeService
+            let scale = displayScale
+            let maxDimension = max(orientation.cardHeight, 220)
+
+            thumbnailImage = await Task.detached(priority: .userInitiated) {
+                autoreleasepool {
+                    decoder.downsample(
+                        maxDimension: maxDimension,
+                        scale: scale
+                    )
+                }
+            }.value
+        }
     }
     
     @ViewBuilder
     private var imageContent: some View {
-        if let imageData, let uiImage = UIImage(data: imageData) {
-            Image(uiImage: uiImage)
+        if let thumbnailImage {
+            Image(uiImage: thumbnailImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
         } else {
@@ -72,7 +95,7 @@ private extension PhotoOrientation {
 
 #Preview {
     ProjectCardView(
-        imageData: nil,
+        imageID: "",
         title: "Sample Project",
         hasFace: true,
         orientation: .portrait,

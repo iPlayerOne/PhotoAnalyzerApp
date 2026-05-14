@@ -5,6 +5,7 @@ struct ProcessingPhotoOverlayView: View {
     let title: String
     let processingState: PhotoProcessingState
     let onClose: () -> Void
+    let onExport: () -> Void
     
     private var showExport: Bool {
         if case .ready = processingState {
@@ -49,6 +50,7 @@ struct ProcessingPhotoOverlayView: View {
                     PrimaryButton(
                         title: AppStrings.Button.export,
                         isDisabled: false) {
+                            onExport()
                     }
                 }
             }
@@ -81,6 +83,6 @@ extension ProcessingPhotoOverlayView {
 #Preview {
     let sampleImage = UIImage(systemName: "photo")!
     let data = sampleImage.pngData()!
-    return ProcessingPhotoOverlayView(imageData: data,title: "Processing", processingState: .ready(hasFace: true ), onClose: {})
+    return ProcessingPhotoOverlayView(imageData: data,title: "Processing", processingState: .ready(hasFace: true ), onClose: {}, onExport: {})
 
 }

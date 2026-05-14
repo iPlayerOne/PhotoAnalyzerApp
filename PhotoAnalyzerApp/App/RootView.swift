@@ -4,6 +4,7 @@ import SwiftData
 struct RootView: View {
     private let dependencies: AppDependency
     @State private var projectsViewModel: ProjectsViewModel
+    @State private var shareItem: ShareItem?
     
     init(dependencies: AppDependency) {
         self.dependencies = dependencies
@@ -33,6 +34,9 @@ struct RootView: View {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             projectsViewModel.closeOverlay()
                         }
+                    },
+                    onExport: {
+                        shareItem = projectsViewModel.makeShareItem()
                     }
                 )
                 .transition(.opacity)
@@ -40,6 +44,9 @@ struct RootView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .sheet(item: $shareItem) { item in
+            ShareSheet(items: [item.url])
+        }
     }
 }
 

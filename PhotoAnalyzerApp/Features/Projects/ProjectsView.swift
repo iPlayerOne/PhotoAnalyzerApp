@@ -94,11 +94,15 @@ extension ProjectsView {
     @ViewBuilder
     private func projectCard(for project: PhotoProjectEntity) -> some View {
         ProjectCardView(
+            imageID: project.fileName,
             imageData: viewModel.loadImageData(fileName: project.fileName),
             title: project.title,
             hasFace: project.hasFace,
             orientation: project.orientation
         ) {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                viewModel.openProject(project)
+            }
         }
     }
     private var addButton: some View {
