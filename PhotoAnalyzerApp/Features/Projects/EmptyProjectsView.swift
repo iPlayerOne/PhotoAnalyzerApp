@@ -25,7 +25,8 @@ struct EmptyProjectsView: View {
             
             Spacer()
         }
-        .padding(.horizontal, 75)
+        .frame(maxWidth: 360)
+        .padding(.horizontal, 32)
     }
 }
 

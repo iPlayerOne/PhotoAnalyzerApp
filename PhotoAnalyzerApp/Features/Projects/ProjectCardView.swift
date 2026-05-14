@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProjectCardView: View {
     let imageID: String
+    let loadImageData: () async -> Data?
     let title: String
     let hasFace: Bool
     let orientation: PhotoOrientation
@@ -47,7 +48,7 @@ struct ProjectCardView: View {
         }
         .buttonStyle(.plain)
         .task(id: imageID) {
-            guard let imageData else {
+            guard let imageData = await loadImageData() else {
                 thumbnailImage = nil
                 return
             }
@@ -59,6 +60,7 @@ struct ProjectCardView: View {
             thumbnailImage = await Task.detached(priority: .userInitiated) {
                 autoreleasepool {
                     decoder.downsample(
+                        imageData,
                         maxDimension: maxDimension,
                         scale: scale
                     )
@@ -96,6 +98,7 @@ private extension PhotoOrientation {
 #Preview {
     ProjectCardView(
         imageID: "",
+        loadImageData: { nil },
         title: "Sample Project",
         hasFace: true,
         orientation: .portrait,

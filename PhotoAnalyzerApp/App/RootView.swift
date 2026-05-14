@@ -39,10 +39,11 @@ struct RootView: View {
                         shareItem = projectsViewModel.makeShareItem()
                     }
                 )
-                .transition(.opacity)
+                .transition(.opacity.combined(with: .scale(scale: 0.96)))
                 .zIndex(1)
             }
         }
+        .animation(.easeInOut(duration: 0.25), value: projectsViewModel.isOverlayPresented)
         .preferredColorScheme(.dark)
         .sheet(item: $shareItem) { item in
             ShareSheet(items: [item.url])

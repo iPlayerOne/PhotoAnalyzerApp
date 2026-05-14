@@ -95,7 +95,9 @@ extension ProjectsView {
     private func projectCard(for project: PhotoProjectEntity) -> some View {
         ProjectCardView(
             imageID: project.fileName,
-            imageData: viewModel.loadImageData(fileName: project.fileName),
+            loadImageData: {
+                viewModel.loadImageData(fileName: project.fileName)
+            },
             title: project.title,
             hasFace: project.hasFace,
             orientation: project.orientation
