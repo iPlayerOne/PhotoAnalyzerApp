@@ -1,12 +1,12 @@
-import UIKit
 import ImageIO
+import UIKit
 
 protocol ImageDecodeService: Sendable {
-   nonisolated func downsample(_ data: Data, maxDimension: CGFloat, scale: CGFloat) -> UIImage?
-   nonisolated func downsampleCGImage(_ data: Data, maxPixelSize: Int) -> CGImage?
+    nonisolated func downsample(_ data: Data, maxDimension: CGFloat, scale: CGFloat) -> UIImage?
+    nonisolated func downsampleCGImage(_ data: Data, maxPixelSize: Int) -> CGImage?
 }
 
-final class ImageDecodeServiceImpl: ImageDecodeService, @unchecked Sendable {
+final class ImageIOImageDecodeService: ImageDecodeService, @unchecked Sendable {
     nonisolated func downsample(_ data: Data, maxDimension: CGFloat, scale: CGFloat) -> UIImage? {
         let maxPixelSize = makeMaxPixelSize(maxDimension: maxDimension, scale: scale)
         guard let cg = downsampleCGImage(data, maxPixelSize: maxPixelSize) else { return nil }
@@ -40,4 +40,3 @@ final class ImageDecodeServiceImpl: ImageDecodeService, @unchecked Sendable {
         return max(2, maxPixel)
     }
 }
-

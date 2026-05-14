@@ -2,11 +2,11 @@ import SwiftUI
 import SwiftData
 
 struct RootView: View {
-    private let dependencies: AppDependency
+    private let dependencies: AppDependencies
     @State private var projectsViewModel: ProjectsViewModel
     @State private var shareItem: ShareItem?
     
-    init(dependencies: AppDependency) {
+    init(dependencies: AppDependencies) {
         self.dependencies = dependencies
         
         _projectsViewModel = State(
@@ -15,7 +15,8 @@ struct RootView: View {
                 faceDetectionService: dependencies.faceDetectionService,
                 imageStorageService: dependencies.imageStorageService,
                 repository: dependencies.makePhotoProjectRepository()
-            ))
+            )
+        )
     }
     
     var body: some View {
@@ -63,7 +64,6 @@ struct RootView: View {
         configurations: [configuration]
     )
 
-    return RootView(dependencies: AppDependency(modelContainer: container))
-    .modelContainer(container)
-
+    return RootView(dependencies: AppDependencies(modelContainer: container))
+        .modelContainer(container)
 }

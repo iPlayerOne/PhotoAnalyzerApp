@@ -3,10 +3,10 @@ import Foundation
 protocol LocalImageStorageService {
     func saveImage(data: Data, fileName: String) throws
     func loadImage(fileName: String) throws -> Data
-    func imageURL(for: String) throws -> URL
+    func imageURL(for fileName: String) throws -> URL
 }
 
-final class LocalImageStorageServiceImpl: LocalImageStorageService {
+final class FileSystemImageStorageService: LocalImageStorageService {
     private let fileManager: FileManager
     private let folderName = "Images"
     
@@ -18,8 +18,7 @@ final class LocalImageStorageServiceImpl: LocalImageStorageService {
         let url = try imageURL(for: fileName)
         try data.write(to: url, options: [.atomic])
     }
-    
-    
+
     func loadImage(fileName: String) throws -> Data {
         let url = try imageURL(for: fileName)
         return try Data(contentsOf: url)

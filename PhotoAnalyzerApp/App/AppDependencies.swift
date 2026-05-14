@@ -1,20 +1,19 @@
-import Foundation
 import SwiftData
 
-final class AppDependency {
+final class AppDependencies {
+    private let modelContainer: ModelContainer
+
     let imageNameGenerator: ImageNameGenerator
     let faceDetectionService: FaceDetectionService
     let photoOrientationDetector: PhotoOrientationDetector
     let imageStorageService: LocalImageStorageService
-    
-    private let modelContainer: ModelContainer
-    
+
     init(
         modelContainer: ModelContainer,
         imageNameGenerator: ImageNameGenerator = ImageNameGenerator(),
-        faceDetectionService: FaceDetectionService = FaceDetectionServiceImpl(),
+        faceDetectionService: FaceDetectionService = VisionFaceDetectionService(),
         photoOrientationDetector: PhotoOrientationDetector = PhotoOrientationDetector(),
-        imageStorageService: LocalImageStorageService = LocalImageStorageServiceImpl()
+        imageStorageService: LocalImageStorageService = FileSystemImageStorageService()
     ) {
         self.modelContainer = modelContainer
         self.imageNameGenerator = imageNameGenerator
@@ -25,11 +24,10 @@ final class AppDependency {
     
     @MainActor
     func makePhotoProjectRepository() -> PhotoProjectRepository {
-        PhotoProjectRepositoryImpl(
+        SwiftDataPhotoProjectRepository(
             modelContext: modelContainer.mainContext,
             imageStorageService: imageStorageService,
             orientationDetector: photoOrientationDetector
         )
     }
-
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 private struct ImageDecodeServiceKey: EnvironmentKey {
-    static let defaultValue: ImageDecodeService = ImageDecodeServiceImpl()
+    static let defaultValue: ImageDecodeService = ImageIOImageDecodeService()
 }
 
 extension EnvironmentValues {

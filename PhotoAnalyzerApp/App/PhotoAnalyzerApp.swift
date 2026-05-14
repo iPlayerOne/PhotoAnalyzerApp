@@ -4,7 +4,7 @@ import SwiftData
 @main
 struct PhotoAnalyzerApp: App {
     private let sharedModelContainer: ModelContainer
-    private let dependencies: AppDependency
+    private let dependencies: AppDependencies
     
     init() {
         let schema = Schema([PhotoProjectEntity.self])
@@ -20,7 +20,7 @@ struct PhotoAnalyzerApp: App {
             )
             
             self.sharedModelContainer = container
-            self.dependencies = AppDependency(modelContainer: container)
+            self.dependencies = AppDependencies(modelContainer: container)
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

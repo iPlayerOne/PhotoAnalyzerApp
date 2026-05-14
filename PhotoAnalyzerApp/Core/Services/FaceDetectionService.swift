@@ -1,13 +1,12 @@
 import CoreML
 import Foundation
-import ImageIO
 import Vision
 
 protocol FaceDetectionService {
     func detectFace(in imageData: Data) async throws -> Bool
 }
 
-final class FaceDetectionServiceImpl: FaceDetectionService {
+final class VisionFaceDetectionService: FaceDetectionService {
     func detectFace(in imageData: Data) async throws -> Bool {
         try await Task.detached(priority: .userInitiated) {
             let request = VNDetectFaceRectanglesRequest()
@@ -26,9 +25,8 @@ final class FaceDetectionServiceImpl: FaceDetectionService {
             let handler = VNImageRequestHandler(data: imageData)
             
             try handler.perform([request])
-                    
+
             return !(request.results?.isEmpty ?? true)
         }.value
-        
     }
 }

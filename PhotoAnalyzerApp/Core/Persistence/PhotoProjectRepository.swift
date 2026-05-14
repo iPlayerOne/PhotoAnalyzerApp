@@ -7,7 +7,7 @@ protocol PhotoProjectRepository {
 }
 
 @MainActor
-final class PhotoProjectRepositoryImpl: PhotoProjectRepository {
+final class SwiftDataPhotoProjectRepository: PhotoProjectRepository {
     private let modelContext: ModelContext
     private let imageStorageService: LocalImageStorageService
     private let orientationDetector: PhotoOrientationDetector
@@ -42,6 +42,4 @@ final class PhotoProjectRepositoryImpl: PhotoProjectRepository {
         
         return project
     }
-    
-    
 }

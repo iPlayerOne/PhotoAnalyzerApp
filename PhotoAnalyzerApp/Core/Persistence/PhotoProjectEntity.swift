@@ -10,7 +10,14 @@ final class PhotoProjectEntity {
     var orientationRawValue: String
     var createdAt: Date
     
-    init(id: UUID, title: String, fileName: String, hasFace: Bool, orientation: PhotoOrientation, createdAt: Date) {
+    init(
+        id: UUID,
+        title: String,
+        fileName: String,
+        hasFace: Bool,
+        orientation: PhotoOrientation,
+        createdAt: Date
+    ) {
         self.id = id
         self.title = title
         self.fileName = fileName

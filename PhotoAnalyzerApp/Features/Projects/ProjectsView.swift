@@ -20,42 +20,34 @@ struct ProjectsView: View {
     
     private var leftColumn: [PhotoProjectEntity] {
         filteredProjects.enumerated()
-            .filter{ index, _ in index.isMultiple(of: 2) }
+            .filter { index, _ in index.isMultiple(of: 2) }
             .map { _, project in project }
     }
     
     private var rightColumn: [PhotoProjectEntity] {
         filteredProjects.enumerated()
-            .filter{ index, _ in !index.isMultiple(of: 2) }
+            .filter { index, _ in !index.isMultiple(of: 2) }
             .map { _, project in project }
     }
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 16) {
-                
-                if projects.isEmpty {
-                    EmptyProjectsView {
-                        isPhotoPickerPresented = true
-                    }
-                } else {
-                    projectsList
+        VStack(spacing: 16) {
+            if projects.isEmpty {
+                EmptyProjectsView {
+                    isPhotoPickerPresented = true
                 }
+            } else {
+                projectsList
             }
-            .padding(.horizontal, 8)
-            .padding(.top, 24)
-            
-            
-            
-            
         }
+        .padding(.horizontal, 8)
+        .padding(.top, 24)
         .navigationTitle(AppStrings.Projects.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 addButton
             }
-            
         }
         .searchable(
             text: $searchText,
@@ -83,30 +75,12 @@ struct ProjectsView: View {
                 }
                 selectedPickerItem = nil
                 isPhotoPickerPresented = false
-                
             }
         }
     }
-    
 }
 
 extension ProjectsView {
-    @ViewBuilder
-    private func projectCard(for project: PhotoProjectEntity) -> some View {
-        ProjectCardView(
-            imageID: project.fileName,
-            loadImageData: {
-                viewModel.loadImageData(fileName: project.fileName)
-            },
-            title: project.title,
-            hasFace: project.hasFace,
-            orientation: project.orientation
-        ) {
-            withAnimation(.easeInOut(duration: 0.25)) {
-                viewModel.openProject(project)
-            }
-        }
-    }
     private var addButton: some View {
         Button {
             isPhotoPickerPresented = true
@@ -115,10 +89,8 @@ extension ProjectsView {
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(Color("AccentMint"))
         }
-        
     }
-    
-    
+
     private var projectsList: some View {
         GeometryReader { proxy in
             let spacing: CGFloat = 12
@@ -147,6 +119,23 @@ extension ProjectsView {
             }
         }
     }
+
+    @ViewBuilder
+    private func projectCard(for project: PhotoProjectEntity) -> some View {
+        ProjectCardView(
+            imageID: project.fileName,
+            loadImageData: {
+                viewModel.loadImageData(fileName: project.fileName)
+            },
+            title: project.title,
+            hasFace: project.hasFace,
+            orientation: project.orientation
+        ) {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                viewModel.openProject(project)
+            }
+        }
+    }
 }
 
 #Preview {
@@ -162,7 +151,7 @@ extension ProjectsView {
         configurations: [configuration]
     )
     
-    let dependencies = AppDependency(modelContainer: container)
+    let dependencies = AppDependencies(modelContainer: container)
     
     let viewModel = ProjectsViewModel(
         nameGenerator: dependencies.imageNameGenerator,

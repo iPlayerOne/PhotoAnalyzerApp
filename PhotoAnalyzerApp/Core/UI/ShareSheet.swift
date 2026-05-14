@@ -9,6 +9,6 @@ struct ShareSheet: UIViewControllerRepresentable {
         vc.excludedActivityTypes = excluded
         return vc
     }
+
     func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
 }
-
