@@ -125,7 +125,7 @@ extension ProjectsView {
             let availableWidth = max(proxy.size.width - spacing, 0)
             let columnWidth = availableWidth / 2
             
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 HStack(alignment: .top, spacing: spacing) {
                     LazyVStack(spacing: spacing) {
                         ForEach(leftColumn, id: \.id) { project in

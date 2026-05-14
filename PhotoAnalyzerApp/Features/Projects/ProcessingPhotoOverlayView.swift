@@ -16,42 +16,47 @@ struct ProcessingPhotoOverlayView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            ZStack {
+            ZStack(alignment: .bottom) {
                 Color.black.opacity(0.55)
                     .ignoresSafeArea()
                     .onTapGesture {
                         onClose()
                     }
 
-                VStack(spacing: 0) {
-                    Spacer()
-
-                    VStack(spacing: 20) {
-                        imageContent(containerSize: proxy.size)
-                        titleRow
-                    }
-
-                    Spacer()
-
-                    if showExport {
-                        PrimaryButton(
-                            title: AppStrings.Button.export,
-                            isDisabled: false
-                        ) {
-                            onExport()
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, 44)
-                        .transition(.opacity.combined(with: .move(edge: .bottom)))
-                    }
+                VStack(spacing: 20) {
+                    imageContent(containerSize: proxy.size)
+                    titleRow
                 }
                 .padding(.horizontal, 24)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: .center
+                )
+                .contentShape(Rectangle())
+                .onTapGesture {}
+
+                if showExport {
+                    exportButtonSection
+                        .transition(.opacity.combined(with: .move(edge: .bottom)))
+                }
             }
         }
     }
 }
 
 extension ProcessingPhotoOverlayView {
+    private var exportButtonSection: some View {
+        PrimaryButton(
+            title: AppStrings.Button.export,
+            isDisabled: false,
+            action: onExport
+        )
+        .frame(maxWidth: 440)
+        .padding(.horizontal, 24)
+        .padding(.bottom, 16)
+    }
+
     @ViewBuilder
     private func imageContent(containerSize: CGSize) -> some View {
         switch processingState {
